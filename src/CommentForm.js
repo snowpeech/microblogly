@@ -1,6 +1,6 @@
 import React,{useState} from "react";
 import {useDispatch} from "react-redux";
-import { v4 as uuidv4 } from 'uuid';
+import {addCommentToApi} from "./actionCreators"
 
 const CommentForm = ({postId})=>{
     const INITIAL_STATE={comment:""}
@@ -10,8 +10,9 @@ const CommentForm = ({postId})=>{
     const addComment = (text)=>{
         //figure out alternative for id... use getTime?
         let id=new Date().getTime()
-        let comment={text, id, postId}        
-        dispatch({type:"ADD_COMMENT", comment})
+        let comment={text, id, postId}    
+        dispatch(addCommentToApi(postId,comment))    
+        // dispatch({type:"ADD_COMMENT", comment})
     }
     
     const handleChange=(evt)=>{

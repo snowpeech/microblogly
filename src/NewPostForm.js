@@ -1,7 +1,7 @@
 import React,{useState} from "react";
 import {useHistory, useParams} from 'react-router-dom'
 import {useDispatch} from "react-redux"
-import { v4 as uuid } from 'uuid';
+import {getAPostFromApi,addPostToApi,updatePostInApi} from './actionCreators'
 
 const NewPostForm = ({post, edit, toggleEdit} )=>{
     const dispatch = useDispatch();
@@ -26,18 +26,20 @@ const NewPostForm = ({post, edit, toggleEdit} )=>{
         evt.preventDefault();
         let id = postId;
         const {title, description, body}=formData;
-        const updatedPost={[id]:{title,description,body,comments:post.comments}}
+        const {comments} = post;
+        const updatedPost={title,description,body,id, comments}
         toggleEdit();
-        dispatch({type:"EDIT_POST", updatedPost});
+        console.log("updating post")
+        dispatch(updatePostInApi(updatedPost))
+        // dispatch({type:"EDIT_POST", updatedPost});
         history.push(`/${id}`);
     }
+
     const addPost =(evt)=>{
         evt.preventDefault();
-        const id = uuid();
         const {title, description, body}=formData;
-        const newPost={[id]:{title,description,body,comments:{}}}
-
-        dispatch({type:"ADD_POST", newPost})
+        const newPost={title,description,body,comments:{}}
+        dispatch(addPostToApi(newPost))
         history.push("/");
     }
 

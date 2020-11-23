@@ -1,27 +1,42 @@
-import React,{useState} from "react";
+import React,{useState, useEffect} from "react";
 import {useDispatch, useSelector} from 'react-redux';
-import {useParams, Redirect} from 'react-router-dom'
+import {useParams, useHistory,Redirect} from 'react-router-dom'
 import NewPostForm from "./NewPostForm";
 import Comments from "./Comments"
 import CommentForm from "./CommentForm"
+import {getAPostFromApi, deletePostFromApi} from './actionCreators'
 
 const PostView = ()=>{
-    const {postId} = useParams();
-    const [showEdit, setShowEdit]=useState(false)
+    const history = useHistory();
     const dispatch = useDispatch()
     
+    const {postId} = useParams();
+    const [showEdit, setShowEdit]=useState(false)
     const posts = useSelector(state => state.posts)
-    const post = posts[postId]
-    console.log("checking comments are in post", post)
+    let post = posts[postId]//currently need to get id: postId. go shuffle state
+
+    useEffect(()  =>  {
+        
+        if(!post){
+            dispatch(getAPostFromApi(postId))
+        } 
+    },[dispatch, postId])
+
+
     const editPost=()=>{
         setShowEdit(!showEdit)        
     }
 
     const deletePost=()=>{
-        dispatch({type:"DELETE_POST", id:postId})
+        dispatch(deletePostFromApi(postId))
+        history.push("/")
     }
+
+    
 if(!post){
-    return (<Redirect to="/" />)
+    //needs to show something while loading. Not sure what to do if on the wrong id. if redirecting, then it takes two clicks to get here from Home page
+    return (<>Loading...</>)
+    
 } else {
     return(    
         <div className="PostView">
@@ -33,7 +48,7 @@ if(!post){
             <button onClick = {deletePost}>Delete Post</button> 
             {showEdit ? <><NewPostForm post={post} edit toggleEdit={setShowEdit}/> <button onClick={editPost}>Cancel Changes</button> </> : ""}
 
-            <Comments comments={post.comments}/>
+            <Comments comments={post.comments} postId={postId} />
             <CommentForm postId={postId} />
         </div>)
     } 

@@ -1,18 +1,17 @@
-import React,{useState} from "react";
-import {useHistory, useParams} from 'react-router-dom'
+import React from "react";
+import {deleteCommentFromApi} from './actionCreators'
 import {useDispatch} from "react-redux"
-import { v4 as uuid } from 'uuid';
 
-const Comments = ({comments})=>{
-    console.log("Comments component:", comments)
-    let commentArr =[];
-    for(const [key, value]  of Object.entries(comments)){
-        let x = {"text":value,id:key}
-        commentArr.push(x); 
+const Comments = ({comments, postId})=>{
+    const dispatch = useDispatch()
+
+    const deleteComment=(commentId)=>{
+        dispatch(deleteCommentFromApi(postId,commentId))
     }
+
 return (<div>
     <h3>Comments</h3>
-{commentArr.map(comment => <div key={comment.id}>{comment.text}</div>)}
+{comments.map(comment => <div key={comment.id}>{comment.text}   <button onClick={()=>deleteComment(comment.id)}> X</button></div>)}
     </div>)
 }
 export default Comments;
