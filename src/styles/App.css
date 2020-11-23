@@ -16,3 +16,18 @@
 .App-link {
   color: #61dafb;
 }
+
+.Posts {
+  margin: auto;
+  width: 70%;
+}
+
+.Post {
+  margin: 1rem;
+  color: orange;
+  display: flex;
+  justify-content: space-between;
+}
+.Post button {
+  margin: 0px 5px;
+}

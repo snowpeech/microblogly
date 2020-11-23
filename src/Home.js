@@ -13,6 +13,8 @@ const Home = ()=>{
         postArr.push( {...value}); 
     }
 
+    let sortedPosts = postArr.sort((a, b) => (a.votes < b.votes) ? 1 : -1)
+
     useEffect(()  =>  {
         dispatch(getPostsFromApi())
     },[dispatch])
@@ -24,11 +26,23 @@ const Home = ()=>{
     }
 
 
+
 return(<>
     <h1>Home</h1>
-    {postArr.map(post=><div key={post.id}>
-    <Link to={`/${post.id}`}> {post.title} | {post.description} </Link> <button onClick={()=>vote("up", post.id)}>Up</button>{post.votes} <button onClick={()=>vote("down", post.id)}>Down</button>
+    <div className="Posts">
+    {sortedPosts.map(post => 
+    <div key={post.id} className="Post">
+        <div>
+        <Link to={`/${post.id}`}> {post.title} | {post.description} </Link> 
+        </div>
+        <div>
+        <button onClick={()=>vote("up", post.id)}>^</button>  {post.votes}{"  "}    
+        <button onClick={()=>vote("down", post.id)}>v</button>
+        </div>
     </div>)}
+
+    </div>
+    
 </>)
 }
 

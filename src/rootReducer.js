@@ -6,8 +6,8 @@ function rootReducer(state = INITIAL_STATE, action) {
       {//add post
       let {posts, titles} = state;
       const {newPost,newTitle} = action.payload
-
-    return {...state, posts:{...posts, ...newPost}, titles:{...titles,newTitle}}
+        
+      return {...state, posts:{...posts, ...newPost}, titles:{...titles, newTitle}}
         // return state;
     }
 
