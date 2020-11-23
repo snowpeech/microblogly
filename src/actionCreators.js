@@ -70,13 +70,16 @@ function updatePost(post){
 export function addCommentToApi(postId,comment){
     //update post in api
     return async function(dispatch){
-        
+        try {
         let res = await axios.post(`${BASE_URL}/posts/${postId}/comments`, comment);
         console.log("add comt to api",{...res.data, postId}) //{id, text}
          let newComment = {...res.data, postId}
         dispatch(addComment(newComment))
+        }catch(e){
+            dispatch(setError())
+        }
     }
-    }
+}
     
 function addComment(comment){
     return {type:"ADD_COMMENT", comment}
@@ -90,11 +93,36 @@ export function deleteCommentFromApi(postId,commentId){
 
             dispatch(deleteComment({postId,commentId}))
         } catch(e){
-            console.error(e)
+            dispatch(setError())
         }
     }
 }
     
 function deleteComment(ids){
     return {type:"DELETE_COMMENT", ids}
+}
+
+export function votePostInApi(dir,postId){
+    //update post in api
+    return async function(dispatch){
+        try{
+            let res = await axios.post(`${BASE_URL}/posts/${postId}/vote/${dir}`);
+            console.log(res.data)
+            console.log("What am I passing?", {...res.data,postId})
+            dispatch(votePost({...res.data,postId}))
+        } catch(e){
+            dispatch(setError())
+        }
+    }
+}
+    
+function votePost(obj){
+    const {votes, postId}=obj
+    console.log("vote post",postId, votes)
+    const item ={votes, postId}
+    return {type:"UPDATE_VOTES", item }
+}
+
+function setError(){
+    return {type:"ERROR"}
 }

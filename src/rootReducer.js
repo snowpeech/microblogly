@@ -1,6 +1,5 @@
-
-
 const INITIAL_STATE = {posts:{}, titles:{}, error:false}
+
 function rootReducer(state = INITIAL_STATE, action) {  
   switch (action.type) {
     case "ADD_POST":
@@ -82,10 +81,29 @@ function rootReducer(state = INITIAL_STATE, action) {
 
     case "LOAD_A_POST":
       {
-        let {post} =action;
         let {posts} = state;
+        let {post} =action;
         return {...state, posts:{...posts, [post.id]:post}}
       }
+
+    case "UPDATE_VOTES":
+      {
+        let {titles} = state;
+        let {votes, postId} =action.item;
+        
+        console.log("update votes titles",titles, "dir vote:",postId, votes)
+  
+        const newTitles = titles.map(title =>
+          title.id === postId
+            ? { ...title, votes }
+            : title
+        );
+
+        return {...state, titles:newTitles}
+      }
+
+    case "ERROR":
+      return {...state, error:true}
 
     default:
       return state;
@@ -94,3 +112,14 @@ function rootReducer(state = INITIAL_STATE, action) {
 }
 
 export default rootReducer;
+
+// let test =[{description: "Best post ever!",
+// id: 1,
+// title: "First Post :)",
+// votes: 1}, {description: "A very good post!",
+// id: 2,
+// title: "Second Post",
+// votes: 1}, {description: "A  post!",
+// id: 3,
+// title: "3 Post",
+// votes: 1}]
